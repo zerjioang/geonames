@@ -1,0 +1,7 @@
+com\sherpa\challenge\ApplicationConfig.class
+com\sherpa\challenge\model\GeoRequest.class
+com\sherpa\challenge\services\ICityResolverService.class
+com\sherpa\challenge\util\JsonConverter.class
+com\sherpa\challenge\TrackerResource.class
+com\sherpa\challenge\util\ApiErrors.class
+com\sherpa\challenge\model\IGeoRequest.class
