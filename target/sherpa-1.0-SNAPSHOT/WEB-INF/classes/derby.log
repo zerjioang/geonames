@@ -1,2 +1,1 @@
-Tue Sep 06 02:39:01 CEST 2016 : No se ha podido recibir en el puerto 1527 en el host localhost:
- java.net.BindException: Address already in use: JVM_Bind
+Tue Sep 06 13:03:11 CEST 2016 : Servidor de red Apache Derby: Se ha iniciado 10.11.1.2 - (1629631) y está listo para aceptar las conexiones en el puerto 1527

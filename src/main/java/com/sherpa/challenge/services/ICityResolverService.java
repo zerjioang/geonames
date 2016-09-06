@@ -11,6 +11,6 @@ package com.sherpa.challenge.services;
  */
 public interface ICityResolverService {
     
-    String getCity(final String username, final String zipcode);
+    String demo(final String username, final String zipcode);
     
 }

@@ -29,7 +29,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.sherpa.challenge.TrackerResource.class);
+        resources.add(com.sherpa.challenge.services.TrackerResource.class);
     }
     
 }

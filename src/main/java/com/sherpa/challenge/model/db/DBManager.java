@@ -19,14 +19,16 @@ public class DBManager {
     private static EntityManagerFactory factory;
     private final EntityManager em;
     
-    public static final DBManager instance = new DBManager();
+    private static DBManager instance;
 
     private DBManager() {
-        factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        factory = Persistence.createEntityManagerFactory( "sherpa.challenge.jpa" );
         em = factory.createEntityManager();
     }
     
     public static DBManager getInstance(){
+        if(instance==null)
+            instance = new DBManager();
         return instance;
     }
     
