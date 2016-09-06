@@ -5,7 +5,10 @@
  */
 package com.sherpa.challenge;
 
-import com.sherpa.challenge.model.GeoRequest;
+import com.sherpa.challenge.model.db.DBManager;
+import com.sherpa.challenge.model.db.Detalle;
+import com.sherpa.challenge.model.db.Master;
+import com.sherpa.challenge.model.http.GeoRequest;
 import com.sherpa.challenge.util.ApiErrors;
 import com.sherpa.challenge.util.JsonConverter;
 import java.io.IOException;
@@ -29,22 +32,12 @@ public class TrackerResource {
 
     @Context
     private UriInfo context;
+    private DBManager manager;
 
     /**
      * Creates a new instance of TrackerResource
      */
     public TrackerResource() {
-    }
-
-    /**
-     * Retrieves representation of an instance of com.sherpa.challenge.TrackerResource
-     * @return an instance of java.lang.String
-     */
-    @GET
-    @Path("hello")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return "hello world";
     }
     
     /**
@@ -60,8 +53,8 @@ public class TrackerResource {
     
     /**
      * Retrieves representation of an instance of com.sherpa.geonames.services.GenericResource
-     * @param username
-     * @param zipcode
+     * @param username username
+     * @param zipcode usernames zipcode
      * @return an instance of java.lang.String
      */
     @GET
@@ -71,26 +64,61 @@ public class TrackerResource {
         
         //parse get values
         try{
-        GeoRequest request = new GeoRequest(username, zipcode);
-        //request ok
-        //do the magi stuff
-        
-        //magic done
-        //convert result to json string
-        Object result = null;
-        try {
-            return JsonConverter.convert(result);
-        } catch (IOException | NullPointerException ex) {
-            Logger.getLogger(TrackerResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return ApiErrors.JSON_CONVERSION_ERROR;
-        }
+            GeoRequest request = new GeoRequest(username, zipcode);
+            //request ok
+
+            /*
+            //do the magic stuff
+            CityNameResolver resolver = new CityNameResolver(request);
+            String city = resolver.getCityName();
+
+            request.setCity(city);
+            */
+
+            //save it on db
+            persistentStorage(request);
+
+            //magic done
+            //convert result to json string
+            try {
+                return JsonConverter.convert(request);
+            } catch (IOException | NullPointerException ex) {
+                Logger.getLogger(TrackerResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return ApiErrors.JSON_CONVERSION_ERROR;
+            }
         catch(NumberFormatException e){
             return ApiErrors.ZIPCODE_NO_NUMERIC_ERROR;
         }
         catch(NullPointerException e){
             return ApiErrors.NULL_ARGUMENT_ERROR;
         }
+    }
+
+    private void persistentStorage(GeoRequest request) {
+        
+        manager = DBManager.getInstance();
+        
+        
+        Detalle d = new Detalle();
+        Master m = new Master();
+        
+        //detalle data
+        d.setCity(request.getCity());
+        d.setZipcode(String.valueOf(request.getZipCode()));
+        d.addMaster(m);
+        
+        //master data
+        m.setUsername(request.getUsername());
+        m.setDetalle(d);
+        
+        //save data
+        manager.begin();
+        System.out.println("Making persistent "+d);
+        manager.save(d);
+        System.out.println("Making persistent "+m);
+        manager.save(m);
+        manager.finish(); //save resources
     }
     
 }

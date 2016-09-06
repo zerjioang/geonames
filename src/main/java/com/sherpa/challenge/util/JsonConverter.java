@@ -28,4 +28,8 @@ public class JsonConverter {
             throw ex;
         }
     }
+    
+    public static final Object toObject(String data, Class cls) throws IOException{
+        return mapper.readValue(data, cls);
+    }
 }
